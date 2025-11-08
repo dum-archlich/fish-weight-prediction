@@ -25,7 +25,13 @@ try:
 except ImportError:
     install("numpy")
     import numpy as np
-    
+
+try:
+    from tabulate import tabulate
+except ImportError:
+    install("tabulate")
+    from tabulate import tabulate
+
 try:
     file_csv = pd.read_csv('fishers_maket.csv')
 except FileNotFoundError:
@@ -34,7 +40,7 @@ except FileNotFoundError:
 
 print("--- 2. Analisis Atribut ---")
 print("Contoh 5 baris pertama data:")
-print(file_csv.head())
+print(tabulate(file_csv.head(), headers='keys', tablefmt='grid'))
 print("\nInfo tipe data:")
 file_csv.info()
 
@@ -53,7 +59,7 @@ print(f"Intercept (titik potong): {model.intercept_:.4f}\n")
 
 coeff_df = pd.DataFrame(model.coef_, features, columns=['Koefisien'])
 print("Koefisien (faktor pengali) untuk setiap atribut:\n")
-print(coeff_df)
+print(tabulate(coeff_df, headers='keys', tablefmt='grid'))
 
 print("\n\n--- 4. Hasil Evaluasi Model ---")
 y_pred = model.predict(X_test)
