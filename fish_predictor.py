@@ -33,6 +33,12 @@ except ImportError:
     from tabulate import tabulate
 
 try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    install("matplotlib")
+    import matplotlib.pyplot as plt
+
+try:
     file_csv = pd.read_csv('fishers_maket.csv')
 except FileNotFoundError:
     print("Error: 'fishers_market.csv' file not found.")
@@ -43,6 +49,12 @@ print("Contoh 5 baris pertama data:")
 print(tabulate(file_csv.head(), headers='keys', tablefmt='grid'))
 print("\nInfo tipe data:")
 file_csv.info()
+
+# Plot histogram for each feature
+file_csv.hist(figsize=(10, 8))
+plt.suptitle('Distribusi Atribut Ikan')
+plt.savefig('fish_attributes_histogram.png')
+plt.show()
 
 features = ['Length1', 'Length2', 'Length3', 'Height', 'Width']
 label = 'Weight'
@@ -61,6 +73,16 @@ coeff_df = pd.DataFrame(model.coef_, features, columns=['Koefisien'])
 print("Koefisien (faktor pengali) untuk setiap atribut:\n")
 print(tabulate(coeff_df, headers='keys', tablefmt='grid'))
 
+# Plot coefficients as bar chart
+plt.figure(figsize=(8, 6))
+plt.bar(features, model.coef_)
+plt.title('Koefisien Regresi Linear untuk Setiap Atribut')
+plt.xlabel('Atribut')
+plt.ylabel('Koefisien')
+plt.xticks(rotation=45)
+plt.savefig('coefficients_bar_chart.png')
+plt.show()
+
 print("\n\n--- 4. Hasil Evaluasi Model ---")
 y_pred = model.predict(X_test)
 
@@ -73,6 +95,15 @@ print(f"Mean Absolute Error (MAE): {mae:.4f}")
 print(f"Mean Squared Error (MSE): {mse:.4f}")
 print(f"Root Mean Squared Error (RMSE): {rmse:.4f}")
 print(f"R-squared (R²): {r2:.4f}")
+
+plt.figure(figsize=(8, 6))
+plt.scatter(y_test, y_pred, alpha=0.7)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
+plt.xlabel('Berat Aktual (gram)')
+plt.ylabel('Berat Prediksi (gram)')
+plt.title('Aktual vs Prediksi Berat Ikan')
+plt.savefig('actual_vs_predicted.png')
+plt.show()
 
 print("\n--- Penjelasan Evaluasi ---")
 print(f"R-squared (R²): {r2*100:.2f}%")
