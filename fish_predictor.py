@@ -70,8 +70,9 @@ print("Model berhasil dilatih.")
 print(f"Intercept (titik potong): {model.intercept_:.4f}\n")
 
 coeff_df = pd.DataFrame(model.coef_, features, columns=['Koefisien'])
-print("Koefisien (faktor pengali) untuk setiap atribut:\n")
-print(tabulate(coeff_df, headers='keys', tablefmt='grid'))
+print("Koefisien (faktor pengali) untuk setiap atribut:")
+for feature, coef in zip(features, model.coef_):
+    print(f"{feature}: {coef:.4f}")
 
 # Plot coefficients as bar chart
 plt.figure(figsize=(8, 6))
